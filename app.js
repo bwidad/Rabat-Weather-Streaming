@@ -30,7 +30,7 @@ const tempChart = new Chart(ctx, {
 async function fetchWeather() {
   try {
     // Remplacez par l’URL réelle de votre Azure Function ou API
-    const response = await fetch("https://your-azure-function-endpoint/weather/rabat");
+    const response = await fetch("https://salmon-dune-0a8398c10.6.azurestaticapps.net");
     const data = await response.json();
 
     // Mise à jour des infos texte
@@ -59,3 +59,4 @@ async function fetchWeather() {
 // Mise à jour toutes les 10 secondes
 setInterval(fetchWeather, 10000);
 fetchWeather();
+
