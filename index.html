@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Météo Rabat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🌤️ Météo en temps réel - Rabat</h1>
+  </header>
+
+  <main>
+    <section class="weather-card">
+      <h2 id="city">Rabat</h2>
+      <div class="weather-info">
+        <p><strong>Température :</strong> <span id="temperature">-- °C</span></p>
+        <p><strong>Humidité :</strong> <span id="humidity">-- %</span></p>
+        <p><strong>Vent :</strong> <span id="wind">-- km/h</span></p>
+        <p><strong>Conditions :</strong> <span id="condition">--</span></p>
+      </div>
+    </section>
+
+    <section class="chart-section">
+      <h2>Évolution de la température</h2>
+      <canvas id="tempChart"></canvas>
+    </section>
+  </main>
+
+  <footer>
+    <p>Propulsé par Azure Streaming Data Pipeline</p>
+  </footer>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
