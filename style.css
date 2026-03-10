@@ -1,48 +1,139 @@
+:root {
+  --bg: #0b0f15;
+  --bg-soft: #101622;
+  --card: #121a29;
+  --card-2: #0e1522;
+  --text: #eaf0ff;
+  --muted: #a8b3c7;
+  --primary: #4cc9f0;
+  --accent: #a78bfa;
+  --success: #34d399;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --border: rgba(255,255,255,0.08);
+  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
   margin: 0;
-  padding: 0;
-  color: #333;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  background: radial-gradient(1200px 800px at 20% -10%, #1b2a44 0%, var(--bg) 45%);
+  color: var(--text);
 }
 
-header {
-  background-color: #004080;
-  color: white;
-  text-align: center;
-  padding: 1rem;
+/* Header */
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px);
+  position: sticky; top: 0; background: rgba(11,15,21,0.65); z-index: 20;
+}
+.branding { display: flex; align-items: center; gap: 14px; }
+.logo { width: 44px; height: 44px; display: grid; place-items: center; font-size: 24px;
+  background: linear-gradient(145deg, var(--primary), var(--accent));
+  border-radius: 12px; box-shadow: var(--shadow);
+}
+h1 { margin: 0; font-size: 20px; letter-spacing: .2px; }
+.subtitle { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.actions { display: flex; align-items: center; gap: 12px; }
+.divider { width: 1px; height: 24px; background: var(--border); }
+
+.btn {
+  background: var(--card-2); border: 1px solid var(--border); color: var(--text);
+  padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .2s ease;
+}
+.btn:hover { transform: translateY(-1px); background: #172033; }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: linear-gradient(145deg, #273b5f, #1a2843); }
+.btn-chip { padding: 6px 10px; font-size: 13px; }
+.btn-chip.active { background: #1d2a45; border-color: #2a3c63; }
+
+.container { max-width: 1200px; margin: 22px auto; padding: 0 16px; }
+
+.banner {
+  background: #0f1b30; border: 1px solid var(--border); color: var(--text);
+  padding: 10px 12px; border-radius: 12px; margin-bottom: 14px;
+}
+.banner.success { border-color: rgba(52,211,153,.35); }
+.banner.warn { border-color: rgba(245,158,11,.35); }
+.banner.error { border-color: rgba(239,68,68,.35); }
+
+.grid {
+  display: grid; gap: 16px;
+  grid-template-columns: 1.5fr 1fr; grid-auto-rows: min-content;
+}
+@media (max-width: 980px) {
+  .grid { grid-template-columns: 1fr; }
 }
 
-.weather-card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  text-align: center;
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.0));
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+}
+.card h3 { margin: 0 0 12px; font-size: 16px; color: #dfe8ff; }
+
+.card-hero {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;
+  background: radial-gradient(1000px 600px at 20% -20%, rgba(108,142,191,0.28), rgba(255,255,255,0.02));
+}
+@media (max-width: 980px) {
+  .card-hero { grid-template-columns: 1fr; }
 }
 
-.weather-info p {
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
+.hero-left .location h2 { margin: 0; font-size: 22px; }
+.hero-left .muted { color: var(--muted); margin-top: 4px; }
+
+.temp-row { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; margin-top: 14px; }
+.temp-now { font-size: 64px; font-weight: 700; letter-spacing: -1.2px; }
+.temp-side .label { color: var(--muted); font-size: 12px; margin-right: 6px; }
+.conditions { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; gap: 12px; }
+.cond { display: flex; align-items: center; gap: 8px; }
+.emoji { font-size: 24px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { background: #162238; border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; font-size: 12px; }
+
+.hero-right .map-shell { min-height: 240px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #08101e; }
+.map-placeholder { height: 100%; display: grid; place-items: center; color: var(--muted); }
+
+.kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 720px) { .kpi { grid-template-columns: repeat(2, 1fr); } }
+.kpi-item {
+  background: #0d1627; border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+}
+.kpi-label { color: var(--muted); font-size: 12px; }
+.kpi-value { display: block; margin-top: 6px; font-weight: 600; font-size: 18px; }
+
+.daily-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+@media (max-width: 980px) { .daily-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .daily-grid { grid-template-columns: repeat(2, 1fr); } }
+.day {
+  background: #0f1a2c; border: 1px solid var(--border); border-radius: 12px; padding: 10px;
+  display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center;
+}
+.day .d-name { font-size: 12px; color: var(--muted); text-transform: capitalize; }
+.day .d-emoji { font-size: 22px; }
+.day .d-range { font-weight: 600; }
+.day .d-rain { font-size: 12px; color: #9dc6ff; }
+
+.app-footer {
+  padding: 20px; text-align: center; color: var(--muted);
+  border-top: 1px solid var(--border); margin-top: 24px;
 }
 
-.chart-section {
-  max-width: 600px;
-  margin: 2rem auto;
-  background: white;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+/* Toast */
+.toast {
+  position: fixed; right: 16px; bottom: 16px; background: #132036; border: 1px solid var(--border);
+  padding: 10px 12px; border-radius: 12px; box-shadow: var(--shadow);
 }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #004080;
-  color: white;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+/* Skeleton */
+.skeleton { position: relative; overflow: hidden; border-radius: 8px; }
+.skeleton::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: shimmer 1.2s infinite;
 }
+@keyframes shimmer { 100% { transform: translateX(100%); } }
