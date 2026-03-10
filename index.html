@@ -1,38 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Météo Rabat</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Météo Rabat — Temps réel (Azure)</title>
+  <meta name="description" content="Tableau de bord météo en temps réel pour Rabat, propulsé par Azure." />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Chart.js pour les graphiques -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+
+  <!-- Azure Maps Web SDK (optionnel : uniquement si vous fournissez une clé) -->
+  <link href="https://atlas.microsoft.com/sdk/css/atlas.min.css?api-version=2.0" rel="stylesheet" />
+  <script src="https://atlas.microsoft.com/sdk/js/atlas.min.js?api-version=2.0" defer></script>
+
+  <!-- App -->
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>🌤️ Météo en temps réel - Rabat</h1>
+  <header class="app-header">
+    <div class="branding">
+      <div class="logo">⛅</div>
+      <div>
+        <h1>Météo Rabat</h1>
+        <p class="subtitle">Tableau de bord en temps réel — Propulsé par Azure</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="themeToggle" class="btn" aria-label="Basculer thème">🌓</button>
+      <div class="divider"></div>
+      <div class="unit-switch">
+        <button id="toC" class="btn btn-chip active" aria-pressed="true">°C</button>
+        <button id="toF" class="btn btn-chip" aria-pressed="false">°F</button>
+      </div>
+      <div class="divider"></div>
+      <button id="refreshBtn" class="btn btn-primary">
+        <span>Rafraîchir</span> <strong id="lastUpdate">—</strong>
+      </button>
+    </div>
   </header>
 
-  <main>
-    <section class="weather-card">
-      <h2 id="city">Rabat</h2>
-      <div class="weather-info">
-        <p><strong>Température :</strong> <span id="temperature">-- °C</span></p>
-        <p><strong>Humidité :</strong> <span id="humidity">-- %</span></p>
-        <p><strong>Vent :</strong> <span id="wind">-- km/h</span></p>
-        <p><strong>Conditions :</strong> <span id="condition">--</span></p>
-      </div>
-    </section>
+  <main class="container">
+    <!-- Bandeau d’alerte / état -->
+    <section id="banner" class="banner" aria-live="polite" hidden></section>
 
-    <section class="chart-section">
-      <h2>Évolution de la température</h2>
-      <canvas id="tempChart"></canvas>
+    <!-- Section principale -->
+    <section class="grid">
+      <!-- Carte de résumé -->
+      <article class="card card-hero">
+        <div class="hero-left">
+          <div class="location">
+            <h2 id="locName">Rabat, MA</h2>
+            <p id="obsTime" class="muted">Observation —</p>
+          </div>
+          <div class="temp-row">
+            <div id="tempNow" class="temp-now skeleton">--°</div>
+            <div class="temp-side">
+              <div><span class="label">Ressenti</span> <span id="feelsLike">—</span></div>
+              <div><span class="label">Humidité</span> <span id="humidity">—</span></div>
+              <div><span class="label">Vent</span> <span id="wind">—</span></div>
+            </div>
+          </div>
+          <div class="conditions">
+            <div class="cond">
+              <span id="iconNow" class="emoji">🌡️</span>
+              <span id="descNow">—</span>
+            </div>
+            <div class="chips">
+              <span class="chip">UV <strong id="uv">—</strong></span>
+              <span class="chip">Pression <strong id="pressure">—</strong></span>
+              <span class="chip">AQI <strong id="aqi">—</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div id="map" class="map-shell">
+            <div class="map-placeholder">
+              <div>Carte Azure Maps</div>
+              <small>(optionnelle)</small>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Cartes KPI -->
+      <article class="card kpi">
+        <div class="kpi-item">
+          <span class="kpi-label">Min / Max aujourd’hui</span>
+          <span id="minmaxToday" class="kpi-value">—</span>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">Précip. (24h)</span>
+          <span id="rain24" class="kpi-value">—</span>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">Visibilité</span>
+          <span id="visibility" class="kpi-value">—</span>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">Couverture nuageuse</span>
+          <span id="cloud" class="kpi-value">—</span>
+        </div>
+      </article>
+
+      <!-- Graphiques -->
+      <article class="card">
+        <h3>Température — prochaines 24h</h3>
+        <canvas id="chartTemp" height="110" aria-label="Courbe température 24h"></canvas>
+      </article>
+
+      <article class="card">
+        <h3>Pluie & Vent — prochaines 24h</h3>
+        <canvas id="chartRainWind" height="110" aria-label="Barres précipitations et vent 24h"></canvas>
+      </article>
+
+      <!-- Prévisions quotidiennes -->
+      <article class="card">
+        <h3>Prévisions 7 jours</h3>
+        <div id="daily" class="daily-grid">
+          <!-- Jours injectés en JS -->
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer>
-    <p>Propulsé par Azure Streaming Data Pipeline</p>
+  <footer class="app-footer">
+    <small>© <span id="year"></span> — Dashboard météo pour Rabat. Données: Azure Maps Weather via Azure Function.</small>
   </footer>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="app.js"></script>
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
